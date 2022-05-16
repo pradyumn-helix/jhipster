@@ -1,3 +1,10 @@
+<div class="mb-5">
+  <h6>Sort by</h6>
+  <button class="btn btn-info">Room no</button>
+  <button class="btn btn-info">Floor No</button>
+  <button class="btn btn-info">Type</button>
+  <button class="btn btn-success btn-lg float-end" [routerLink]="['/room/new']">Create Room</button>
+</div>
 <div class="row">
   <div *ngFor="let room of rooms" data-cy="entityTable" class="col mb-4">
     <div class="card" style="width: 18rem">
@@ -5,6 +12,10 @@
         <h5 class="card-title">Room No : {{ room.roomno }}</h5>
         <h5 class="card-subtitle mb-2">Floor : {{ room.floor }}</h5>
         <h5 class="card-subtitle mb-2">Type : {{ room.type }}</h5>
+      </div>
+      <div class="mx-auto">
+        <button class="btn btn-primary mx-2" (click)="getFacilities()">Facalities</button>
+        <button class="btn btn-primary mx-2" (click)="getResidents()">Residents</button>
       </div>
     </div>
     <div class="col-md-9">
@@ -17,7 +28,6 @@
             password="user").</span
           >
         </div>
-
         <div class="alert alert-warning" *ngSwitchCase="false">
           <span jhiTranslate="global.messages.info.register.noaccount">You don't have an account yet?</span>&nbsp;
           <a class="alert-link" routerLink="account/register" jhiTranslate="global.messages.info.register.link">Register a new account</a>
