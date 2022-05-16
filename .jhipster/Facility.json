@@ -1,0 +1,35 @@
+{
+  "applications": ["myApp"],
+  "changelogDate": "20220516063959",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "facility",
+  "fields": [
+    {
+      "fieldName": "aC",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "parking",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "wifi",
+      "fieldType": "Boolean"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": true,
+  "name": "Facility",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "room",
+      "otherEntityRelationshipName": "facility",
+      "relationshipName": "roomid",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceClass"
+}

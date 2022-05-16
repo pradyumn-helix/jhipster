@@ -5,6 +5,9 @@ import { takeUntil } from 'rxjs/operators';
 
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
+import { IRoom } from 'app/entities/room/room.model';
+import { RoomService } from 'app/entities/room/service/room.service';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'jhi-home',
@@ -13,10 +16,21 @@ import { Account } from 'app/core/auth/account.model';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   account: Account | null = null;
-
+  rooms?: IRoom[];
+  isLoading = false;
   private readonly destroy$ = new Subject<void>();
 
-  constructor(private accountService: AccountService, private router: Router) {}
+  constructor(protected roomService: RoomService, private accountService: AccountService, private router: Router) {
+    this.roomService.query().subscribe({
+      next: (res: HttpResponse<IRoom[]>) => {
+        this.isLoading = false;
+        this.rooms = res.body ?? [];
+      },
+      error: () => {
+        this.isLoading = false;
+      },
+    });
+  }
 
   ngOnInit(): void {
     this.accountService

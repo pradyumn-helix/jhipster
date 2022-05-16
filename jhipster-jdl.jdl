@@ -1,0 +1,41 @@
+application {
+  config {
+    baseName myApp,
+    applicationType monolith,
+    packageName com.myapp,
+    authenticationType jwt,
+    prodDatabaseType mysql,
+    clientFramework angular
+  }
+  entities *
+}
+
+entity Resident {
+	firstname String,
+    lastname String,
+    email String required unique,
+    phonenumber String,
+}
+
+entity Room {
+	roomno String required unique,
+    floor Integer,
+    type String,
+}
+
+entity Facility {
+	AC Boolean,
+    Parking Boolean,
+    Wifi Boolean
+}
+
+relationship ManyToOne {
+  Resident{roomid} to Room
+}
+
+relationship ManyToOne{
+	Facility{roomid} to Room
+}
+
+service all with serviceClass
+filter all
