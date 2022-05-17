@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IResident } from '../resident.model';
 import { ResidentService } from '../service/resident.service';
 import { ResidentDeleteDialogComponent } from '../delete/resident-delete-dialog.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'jhi-resident',
@@ -13,8 +14,23 @@ import { ResidentDeleteDialogComponent } from '../delete/resident-delete-dialog.
 export class ResidentComponent implements OnInit {
   residents?: IResident[];
   isLoading = false;
+  rooms = this.route.snapshot.params['id'];
 
-  constructor(protected residentService: ResidentService, protected modalService: NgbModal) {}
+  constructor(protected residentService: ResidentService, protected modalService: NgbModal, private route: ActivatedRoute) {}
+
+  loadAllA(num: number): void {
+    this.isLoading = true;
+
+    this.residentService.query({ 'roomidId.equals': num }).subscribe({
+      next: (res: HttpResponse<IResident[]>) => {
+        this.isLoading = false;
+        this.residents = res.body ?? [];
+      },
+      error: () => {
+        this.isLoading = false;
+      },
+    });
+  }
 
   loadAll(): void {
     this.isLoading = true;
@@ -29,9 +45,12 @@ export class ResidentComponent implements OnInit {
       },
     });
   }
-
   ngOnInit(): void {
-    this.loadAll();
+    if (this.rooms) {
+      this.loadAllA(this.rooms);
+    } else {
+      this.loadAll();
+    }
   }
 
   trackId(_index: number, item: IResident): number {

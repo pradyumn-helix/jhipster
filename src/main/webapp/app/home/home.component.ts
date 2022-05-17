@@ -8,6 +8,7 @@ import { Account } from 'app/core/auth/account.model';
 import { IRoom } from 'app/entities/room/room.model';
 import { RoomService } from 'app/entities/room/service/room.service';
 import { HttpResponse } from '@angular/common/http';
+import { FacilityService } from 'app/entities/facility/service/facility.service';
 
 @Component({
   selector: 'jhi-home',
@@ -17,26 +18,22 @@ import { HttpResponse } from '@angular/common/http';
 export class HomeComponent implements OnInit, OnDestroy {
   account: Account | null = null;
   rooms?: IRoom[];
-  isLoading = false;
+  filterdata?: any;
   private readonly destroy$ = new Subject<void>();
 
-  constructor(protected roomService: RoomService, private accountService: AccountService, private router: Router) {
-    this.roomService.query().subscribe({
-      next: (res: HttpResponse<IRoom[]>) => {
-        this.isLoading = false;
-        this.rooms = res.body ?? [];
-      },
-      error: () => {
-        this.isLoading = false;
-      },
-    });
-  }
+  constructor(
+    protected roomService: RoomService,
+    private accountService: AccountService,
+    private router: Router,
+    private facilityService: FacilityService
+  ) {}
 
   ngOnInit(): void {
     this.accountService
       .getAuthenticationState()
       .pipe(takeUntil(this.destroy$))
       .subscribe(account => (this.account = account));
+    this.getRooms();
   }
 
   login(): void {
@@ -48,11 +45,58 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  getFacilities(): any {
-    alert('data');
+  getFacilities(id: number | undefined): any {
+    this.router.navigate([`/facility/${id!}/view`]);
   }
 
-  getResidents(): any {
-    alert('data');
+  getResidents(roomid: number | undefined): any {
+    this.router.navigate([`/resident/${roomid!}`]);
+  }
+
+  getRoomsFiltered(type: string | undefined): any {
+    switch (type) {
+      case 'aC':
+        this.facilityService.query({ 'aC.in': [true], 'roomidId.greaterThan': 0 }).subscribe(res => {
+          this.filterdata = res.body;
+          this.rooms = [];
+          this.filterdata.forEach((element: any) => {
+            this.rooms?.push(element['roomid']);
+          });
+        });
+        break;
+      case 'wifi':
+        this.facilityService.query({ 'wifi.in': [true], 'roomidId.greaterThan': 0 }).subscribe(res => {
+          this.filterdata = res.body;
+          this.rooms = [];
+          this.filterdata.forEach((element: any) => {
+            this.rooms?.push(element['roomid']);
+          });
+        });
+        break;
+      case 'parking':
+        this.facilityService.query({ 'parking.in': [true], 'roomidId.greaterThan': 0 }).subscribe(res => {
+          this.filterdata = res.body;
+          this.rooms = [];
+          this.filterdata.forEach((element: any) => {
+            this.rooms?.push(element['roomid']);
+          });
+        });
+        break;
+      default:
+        this.getRooms();
+        break;
+    }
+  }
+
+  getRooms(): any {
+    this.roomService.query().subscribe({
+      next: (res: HttpResponse<IRoom[]>) => {
+        this.rooms = res.body ?? [];
+        console.warn(this.rooms);
+      },
+      error() {
+        console.warn('Error');
+      },
+    });
   }
 }

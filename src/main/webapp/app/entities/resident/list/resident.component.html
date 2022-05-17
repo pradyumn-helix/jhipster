@@ -1,13 +1,8 @@
 <div>
   <h2 id="page-heading" data-cy="ResidentHeading">
-    <span jhiTranslate="myApp.resident.home.title">Residents</span>
+    <span jhiTranslate="myApp.resident.home.title" class="h1">Residents</span>
 
     <div class="d-flex justify-content-end">
-      <button class="btn btn-info me-2" (click)="loadAll()" [disabled]="isLoading">
-        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
-        <span jhiTranslate="myApp.resident.home.refreshListLabel">Refresh List</span>
-      </button>
-
       <button
         id="jh-create-entity"
         data-cy="entityCreateButton"
@@ -29,10 +24,9 @@
   </div>
 
   <div class="table-responsive" id="entities" *ngIf="residents && residents.length > 0">
-    <table class="table table-striped" aria-describedby="page-heading">
+    <table class="table" aria-describedby="page-heading">
       <thead>
         <tr>
-          <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
           <th scope="col"><span jhiTranslate="myApp.resident.firstname">Firstname</span></th>
           <th scope="col"><span jhiTranslate="myApp.resident.lastname">Lastname</span></th>
           <th scope="col"><span jhiTranslate="myApp.resident.email">Email</span></th>
@@ -43,9 +37,6 @@
       </thead>
       <tbody>
         <tr *ngFor="let resident of residents; trackBy: trackId" data-cy="entityTable">
-          <td>
-            <a [routerLink]="['/resident', resident.id, 'view']">{{ resident.id }}</a>
-          </td>
           <td>{{ resident.firstname }}</td>
           <td>{{ resident.lastname }}</td>
           <td>{{ resident.email }}</td>
@@ -59,26 +50,14 @@
             <div class="btn-group">
               <button
                 type="submit"
-                [routerLink]="['/resident', resident.id, 'view']"
-                class="btn btn-info btn-sm"
-                data-cy="entityDetailsButton"
-              >
-                <fa-icon icon="eye"></fa-icon>
-                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
-              </button>
-
-              <button
-                type="submit"
                 [routerLink]="['/resident', resident.id, 'edit']"
                 class="btn btn-primary btn-sm"
                 data-cy="entityEditButton"
               >
-                <fa-icon icon="pencil-alt"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
               </button>
 
               <button type="submit" (click)="delete(resident)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
-                <fa-icon icon="times"></fa-icon>
                 <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
               </button>
             </div>
